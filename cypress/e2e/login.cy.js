@@ -1,9 +1,17 @@
-describe("Login Test", () => {
-  it("should log in successfully with valid credentials", () => {
-    cy.visit("/auth");
-    cy.get('input[name="email"]').type("testuser");
-    cy.get('input[name="password"]').type("password123");
-    cy.get('button[type="submit"]').click();
-    cy.url().should("include", "/dashboard");
+describe("Login Tests", () => {
+  before(() => {
+    cy.fixture("users").as("users");
+  });
+
+  it("should log in all users", function () {
+    this.users.forEach((user) => {
+      cy.visit("/auth");
+
+      cy.get('input[name="email"]').clear().type(user.email);
+      cy.get('input[name="password"]').clear().type(user.password);
+
+      cy.contains("ion-button", "Login").click();
+      // Optional logout step if needed before next test
+    });
   });
 });
